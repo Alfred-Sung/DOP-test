@@ -1,66 +1,29 @@
 #include "DOP.h"
 #include "OOP.h"
+#include "modified_DOP.h"
 
 #include <iostream>
 #include <chrono>
 #include <string>
+#include <functional>
 
 using namespace std::chrono;
 
 void Test_DOP() {
 	auto t1 = high_resolution_clock::now();
 
-	DOP::Person vec;
+	DOP::Person* vec = new DOP::Person();
 
-#pragma region Initialization
-	vec.name.reserve(1000000);
-	for (int i = 0; i < vec.name.capacity(); i++)
-		vec.name.push_back("");
+	DOP::Person_init(vec, 1000000, [](int i)->std::string { return ""; }, [](int i)->int { return 100; }, [](int i)->int { return 20; }, [](int i)->float { return i % 100; }, [](int i)-> float { return i / 100; }, [](int i)->float { return 0; }, [](int i)-> float { return 0; }, [](int i)-> float { return 0; }, [](int i)-> float { return 0; }, [](int i)-> float { return 0; });
 
-	vec.health.reserve(1000000);
-	for (int i = 0; i < vec.health.capacity(); i++)
-		vec.health.push_back(100);
-
-	vec.age.reserve(1000000);
-	for (int i = 0; i < vec.age.capacity(); i++)
-		vec.age.push_back(0);
-
-	vec.position.reserve(1000000);
-	for (int i = 0; i < vec.position.capacity(); i++)
-		vec.position.push_back(DOP::Vector3(i % 100, i / 100, 0));
-
-	vec.position.reserve(1000000);
-	for (int i = 0; i < vec.rotation.capacity(); i++)
-		vec.rotation.push_back(DOP::Quaternion());
-#pragma endregion
-
-#pragma region Method Implementation
-	for (int i = 0; i < 10; i++) {
-		for (int i = 0; i < 1000000; i++) {
-			vec.position[i].x += 1;
-			vec.position[i].y += 2;
-			vec.position[i].z += 3;
-		}
-	}
-
-	for (int i = 0; i < 10; i++) {
-		for (int i = 0; i < 1000000; i++) {
-			vec.position[i].x += -1;
-			vec.position[i].y += -2;
-			vec.position[i].z += -3;
-		}
-	}
-#pragma endregion
+	DOP::Vector3_Move(vec, [](int i)->float { return 1; }, [](int i)->float { return 2; }, [](int i)->float { return 3; });
+	DOP::Vector3_Move(vec, [](int i)->float { return -1; }, [](int i)->float { return -2; }, [](int i)->float { return -3; });
 
 	auto t2 = high_resolution_clock::now();
 	auto duration = duration_cast<milliseconds>(t2 - t1).count();
 	std::cout << "DOP: " << duration << " ms\n";
 
-	vec.name.clear();
-	vec.health.clear();
-	vec.age.clear();
-	vec.position.clear();
-	vec.rotation.clear();
+	delete vec;
 }
 
 void Test_OOP() {
@@ -94,7 +57,7 @@ int main() {
 		Test_OOP();
 		Test_DOP();
 	}
-
+	std::cout << "end\n";
 	std::cin.get();
 	return 0;
 }
