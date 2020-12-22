@@ -1,7 +1,7 @@
 # DOP-test
 A simple experiment comparing data-oriented design to object-oriented design code
 
-Program does ten tests that creates 1,000,000 people objects and moves their position 20 times. 
+Program does ten tests that creates 1,000,000 objects and moves their position 20 times. 
 Both g++ and MSVC was used to compile the code to show that DOP is effective regardless of compiler.
 
 
